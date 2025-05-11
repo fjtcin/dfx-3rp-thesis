@@ -2,7 +2,7 @@
 % !TeX program = xelatex
 % !TeX spellcheck = en_US
 
-\documentclass[degree=doctor]{ustcthesis}
+\documentclass[degree=bachelor, output=electronic]{ustcthesis}
 % degree      = doctor | master | bachelor
 % degree-type = academic | professional | engineering
 % language    = chinese | english
@@ -18,28 +18,31 @@
 \copyrightpage
 
 \frontmatter
-\include{chapters/innovations}  % 博士学位论文的创新性说明
+% \include{chapters/innovations}  % 博士学位论文的创新性说明
 \include{chapters/abstract}
 \tableofcontents
 % \listoffigures
 % \listoftables
-\listoffiguresandtables
+% \listoffiguresandtables
 % \include{chapters/notation}
 
 \mainmatter
 \include{chapters/intro}
-\include{chapters/floats}
-\include{chapters/math}
-\include{chapters/citations}
+\include{chapters/related}
+\include{chapters/design}
+\include{chapters/impl}
+\include{chapters/apps}
+\include{chapters/exp}
+\include{chapters/con}
 
 \bibliography{bib/ustc}  % 参考文献使用 BibTeX 编译
 % \printbibliography       % 参考文献使用 BibLaTeX 编译
 
-\appendix
-\include{chapters/complementary}
+% \appendix
+% \include{chapters/complementary}
 
 \backmatter
 \include{chapters/acknowledgements}
-\include{chapters/achievements}
+% \include{chapters/achievements}
 
 \end{document}
