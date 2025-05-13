@@ -1,0 +1,85 @@
+\documentclass[tikz, border=5pt]{standalone}
+\usepackage{tikz}
+\usetikzlibrary{positioning, arrows.meta, calc}
+
+\begin{document}
+\begin{tikzpicture}[
+    % Styles for different elements
+    pe_style/.style={draw, black, minimum size=1.2cm, rectangle, font=\strut},
+    data_a_style/.style={draw, blue, dashed, minimum size=1cm, inner sep=2pt, rectangle, font=\strut},
+    data_b_style/.style={draw, red!70!black, dashed, minimum size=1cm, inner sep=2pt, rectangle, font=\strut},
+    arrow_a_style/.style={blue, thick, -{Stealth[length=2.5mm, width=2mm]}},
+    arrow_b_style/.style={red!70!black, thick, -{Stealth[length=2.5mm, width=2mm]}},
+    time_label_style/.style={font=\small\strut}
+]
+
+% Define key distances (adjust these for desired spacing)
+\newcommand{\peDist}{2.5cm}      % Distance between centers of PEs
+\newcommand{\blockDist}{0.4cm}   % Distance between adjacent data blocks in input streams
+\newcommand{\inputPeDist}{1.0cm} % Distance from the first input block column/row to the PEs
+
+% Processing Elements (PEs)
+\node[pe_style] (c11) at (0,0) {$c_{11}$};
+\node[pe_style, right=\peDist of c11] (c12) {$c_{12}$};
+\node[pe_style, below=\peDist of c11] (c21) {$c_{21}$};
+\node[pe_style, below=\peDist of c12] (c22) {$c_{22}$};
+
+% Title
+\node (title) at ($(c11)+(-2.8,1.9)$) {$C = A \times B$}; % Positioned relative to c11
+
+% Output Timing Labels for PEs
+\node[time_label_style, anchor=north west, at={($(c11.south east)+(0.05,0.0)$)}] {$T_1^\prime$};
+\node[time_label_style, anchor=north west, at={($(c12.south east)+(0.05,0.0)$)}] {$T_2^\prime$};
+\node[time_label_style, anchor=north west, at={($(c21.south east)+(0.05,0.0)$)}] {$T_2^\prime$};
+\node[time_label_style, anchor=north west, at={($(c22.south east)+(0.05,0.0)$)}] {$T_3^\prime$};
+
+% Input A stream (arranged as columns of data for time steps t1, t2, t3)
+% Column t1 (closest to PEs)
+\node[data_a_style, left=\inputPeDist of c11] (a11_block) {$a_{11}$};
+\node[data_a_style, below=\blockDist of a11_block] (a0_t1_block) {};
+\node[time_label_style, below=0.2cm of a0_t1_block.south] {$T_1$};
+
+% Column t2
+\node[data_a_style, left=\blockDist of a11_block] (a12_block) {$a_{12}$};
+\node[data_a_style, below=\blockDist of a12_block] (a21_block) {$a_{21}$};
+\node[time_label_style, below=0.2cm of a21_block.south] {$T_2$};
+
+% Column t3
+\node[data_a_style, left=\blockDist of a12_block] (a_empty_t3_block) {}; % Empty block for a1x stream at t3
+\node[data_a_style, below=\blockDist of a_empty_t3_block] (a22_block) {$a_{22}$};
+\node[time_label_style, below=0.2cm of a22_block.south] {$T_3$};
+
+% Input B stream (arranged as rows of data for time steps t1, t2, t3)
+% Row t1 (closest to PEs)
+\node[data_b_style, above=\inputPeDist of c11] (b11_block) {$b_{11}$};
+\node[data_b_style, right=\blockDist of b11_block] (b0_t1_block) {};
+\node[time_label_style, right=0.2cm of b0_t1_block.east] {$T_1$};
+
+% Row t2
+\node[data_b_style, above=\blockDist of b11_block] (b21_block) {$b_{21}$};
+\node[data_b_style, right=\blockDist of b21_block] (b12_block) {$b_{12}$};
+\node[time_label_style, right=0.2cm of b12_block.east] {$T_2$};
+
+% Row t3
+\node[data_b_style, above=\blockDist of b21_block] (b_empty_t3_block) {}; % Empty block for bx1 stream at t3
+\node[data_b_style, right=\blockDist of b_empty_t3_block] (b22_block) {$b_{22}$};
+\node[time_label_style, right=0.2cm of b22_block.east] {$T_3$};
+
+% Arrows for A data flow
+% Initial inputs (from the t1 column of A blocks)
+\draw[arrow_a_style] (a11_block.east) -- (c11.west);
+\draw[arrow_a_style] (a0_t1_block.east) -- (c21.west);
+% Internal A flow between PEs
+\draw[arrow_a_style] (c11.east) -- (c12.west);
+\draw[arrow_a_style] (c21.east) -- (c22.west);
+
+% Arrows for B data flow
+% Initial inputs (from the t1 row of B blocks)
+\draw[arrow_b_style] (b11_block.south) -- (c11.north);
+\draw[arrow_b_style] (b0_t1_block.south) -- (c12.north);
+% Internal B flow between PEs
+\draw[arrow_b_style] (c11.south) -- (c21.north);
+\draw[arrow_b_style] (c12.south) -- (c22.north);
+
+\end{tikzpicture}
+\end{document}

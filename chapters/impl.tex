@@ -12,7 +12,7 @@ Vitis HLS作为一种高层次综合工具，允许设计者使用C、C++或Open
 然后将其自动转换为寄存器传输级（RTL）代码。这种方法显著提高了设计效率，使得复杂的算法能够更快地在FPGA上实现。
 在本系统中，所有可重构模块均采用C/C++进行开发。核心设计策略是首先实现算法的功能正确性，然后通过迭代地应用HLS优化指令（pragmas）来提升性能和资源利用率。
 关键的优化指令包括用于实现指令级并行的 \verb|PIPELINE| 指令，用于循环展开以实现数据级并行的 \verb|UNROLL| 指令，
-用于优化存储器访问的 \verb|ARRAY_PARTITION| 指令，以及用于定义模块接口（如AXI4-Stream, AXI4-Lite, AXI4-Master）的 \verb|INTERFACE| 指令。
+用于优化存储器访问的 \verb|ARRAY_PARTITION| 指令，以及用于定义模块接口的 \verb|INTERFACE| 指令。
 设计目标是为每个RM生成高效的、能够充分利用FPGA并行性和流水线性质的硬件实现。
 
 \section{稀疏矩阵解压/压缩模块}
@@ -35,7 +35,17 @@ Vitis HLS作为一种高层次综合工具，允许设计者使用C、C++或Open
 
 \section{稠密矩阵乘法模块}
 
+\begin{figure}[htbp]
+\centerline{\includegraphics[width=0.8\columnwidth]{figures/systolic}}
+\caption{脉动阵列算法作用于2\texttimes{}2矩阵乘法。}
+\label{fig:systolic}
+\end{figure}
+
 稠密矩阵乘法模块是本加速系统的核心计算单元之一，其设计采用了脉动阵列（Systolic Array）结构，并结合分块（Tiling）策略以处理大规模矩阵。
+
+如图\ref{fig:systolic}所示，在矩阵乘法\(C=A\times B\)的脉动阵列算法中，每个PE计算矩阵\(C\)的对应元素，其从左侧和上方接收矩阵\(A\)和矩阵\(B\)的元素，
+并在下一时钟周期传递给右侧和下方的PE。PE将每个时钟周期输入的元素相乘并累加，最终便得到了矩阵\(C\)的元素值。
+输入矩阵\(A\)和\(B\)分别对行和列进行 \verb|ARRAY_PARTITION|（如此便能对不同行/列的元素并行访问），每行/列相较于上一行/列延迟一个周期送入PE。
 
 脉动阵列因其规整的数据流和高度的并行性，非常适合在FPGA上实现矩阵乘法。
 算法将输入矩阵A和B分割成小块（tiles），然后将这些小块数据送入脉动阵列进行计算。

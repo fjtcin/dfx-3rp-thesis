@@ -8,7 +8,7 @@
 \section{实验环境与配置}
 
 实验硬件平台为Xilinx Kria KV260 Vision AI入门套件，
-其核心是Zynq UltraScale+ MPSoC。
+其核心是Zynq UltraScale+ MPSoC。使用的Vitis HLS与Vivado工具链版本均为2022.1。
 可编程逻辑（PL）部分根据第四章所述的可重构模块设计，在综合实现后，各模块的工作时钟频率设定为250 MHz。
 处理器系统（PS）端的ARM Cortex-A53四核处理器运行频率为1.33 GHz。
 软件环境方面，KV260上部署了Xilinx特制的Ubuntu 22.04 LTS操作系统，
@@ -28,13 +28,13 @@
 性能指标主要关注端到端执行时间，即包括数据传输与FPGA内核执行的总时间。
 
 对于稠密矩阵乘法 (GEMM)，我们测试了128\texttimes{}128单精度浮点稠密矩阵乘法，FPGA上脉动阵列的每个块大小为12\texttimes{}12。
-CPU执行时间约为38毫秒，而FPGA上的稠密矩阵乘法RM总共耗时1.3毫秒，实现了约29\texttimes{}的加速比。
+CPU执行时间约为32毫秒，而FPGA上的稠密矩阵乘法RM总共耗时1.3毫秒，实现了约25\texttimes{}的加速比。
 
 \section{硬件资源利用率}
 
 \begin{figure}[htbp]
 \centerline{\includegraphics[width=0.8\columnwidth]{figures/a.png}}
-\caption{FPGA实现。RP\_0上实现了COO矩阵解压RM，RP\_1上实现了COO矩阵压缩RM，RP\_2上实现了稠密矩阵乘法。}
+\caption{FPGA实现。RP\_0上实现了COO矩阵解压RM，RP\_1上实现了COO矩阵压缩RM，RP\_2上实现了稠密矩阵乘法RM。}
 \label{fig:a}
 \end{figure}
 
