@@ -3,8 +3,8 @@
 本章旨在详细介绍本工作所涉及的核心技术。
 这些技术涵盖了从基础算法理论到硬件平台、设计方法学、接口协议以及软件运行时环境等多个层面。
 深入理解这些技术对于后续章节中系统设计、实现与评估的阐述至关重要。
-本章将依次介绍矩阵运算基础、FPGA技术原理、高层次综合（HLS）、动态部分重构（DPR）技术、
-AXI总线协议、异构计算系统、Xilinx Kria KV260平台特性以及Xilinx Runtime（XRT）环境。
+本章将依次介绍矩阵运算基础、FPGA技术原理（高层次综合、动态部分重构技术、
+AXI总线协议）、异构计算系统（KV260平台特性、Xilinx运行时环境）。
 
 \section{矩阵运算基础}
 
@@ -23,7 +23,7 @@ FPGA内部主要由可配置逻辑块（CLB）、输入输出块（IOB）、
 与通用处理器相比，FPGA能够实现高度的并行计算和深流水线操作，充分利用硬件资源，
 从而在特定计算密集型任务上展现出显著的性能优势和能效比。其可重构性也为算法的迭代升级和功能调整提供了灵活性。
 
-\section{高层次综合}
+\subsection{高层次综合}
 
 高层次综合（High-Level Synthesis, HLS）是一种设计方法，
 它允许开发者使用C/C++等高层次语言来描述硬件行为，
@@ -32,7 +32,7 @@ HLS的出现极大地提高了FPGA的设计效率，缩短了开发周期，并�
 在本项目中，可重构模块采用Vitis HLS进行编写，通过利用HLS提供的并行化、流水线化等优化指令（pragmas），
 能够有效地将算法映射到FPGA的硬件资源上，实现高效的硬件加速器设计。
 
-\section{动态部分重构技术}
+\subsection{动态部分重构技术}
 
 动态部分重构（Dynamic Partial Reconfiguration, DPR），在Xilinx平台中也称为Dynamic Function eXchange (DFX)，是一项先进的FPGA技术。
 它允许在FPGA正常运行期间，对其内部的特定区域（即可重构分区, Reconfigurable Partition, RP）进行动态地、部分地重新编程，
@@ -41,7 +41,7 @@ HLS的出现极大地提高了FPGA的设计效率，缩短了开发周期，并�
 或者在线更新硬件功能，而无需中断整个系统的运行。在本项目中，通过在FPGA上成功布局3个可重构分区，
 并部署不同的矩阵运算模块，可在不同稀疏矩阵格式处理模块间进行切换，以适应多样化的加速场景。
 
-\section{AXI总线协议}
+\subsection{AXI总线协议}
 
 高级可扩展接口（Advanced eXtensible Interface, AXI）是ARM公司提出的一种高性能、
 高带宽、低延迟的片上总线协议，已成为业界标准，广泛应用于SoC（System-on-Chip）设计中。
@@ -58,7 +58,7 @@ AXIS协议则用于可重构模块之间的互联，支持高速、连续的数�
 本项目基于Xilinx KV260 MPSoC构建了一个异构计算系统，其中ARM Cortex-A53 CPU负责运行操作系统（Ubuntu Linux）和上层应用程序，
 并调度FPGA上的硬件加速模块执行计算密集型的矩阵运算任务。
 
-\section{Xilinx Kria KV260平台特性}
+\subsection{KV260平台特性}
 
 Xilinx Kria KV260 Vision AI Starter Kit是基于Kria K26系统级模块（SOM）的开发平台。
 K26 SOM是一款多处理器系统芯片（MPSoC），集成了四核ARM Cortex-A53处理系统（Processing System, PS）和拥有丰富可编程逻辑（Programmable Logic, PL）资源的FPGA。
@@ -66,7 +66,7 @@ KV260平台专为边缘AI和视觉应用设计，但其强大的异构处理能�
 它提供了DDR4内存、多种外设接口以及对Xilinx开发工具链的良好支持。其MPSoC架构天然支持PS与PL之间的高效协同，
 是实现本项目中CPU控制、FPGA加速的理想硬件基础。FPGA部分支持动态部分重构，为实现灵活可变的加速器提供了硬件保障。
 
-\section{Xilinx运行时环境}
+\subsection{Xilinx运行时环境}
 
 Xilinx Runtime (XRT) 是一个开源的、标准化的软件平台，旨在简化主机CPU与Xilinx FPGA加速器之间的交互。
 XRT包括用户空间库、API以及内核驱动程序，它为应用程序提供了一个统一的接口来管理和控制FPGA上的加速内核，
