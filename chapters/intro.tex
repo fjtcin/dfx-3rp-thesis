@@ -39,7 +39,7 @@ DPR允许在FPGA运行时，仅对其内部指定的一部分区域（称为可�
 提高硬件资源的利用率和系统的整体性能。
 
 本设计正是基于上述背景，旨在探索和实现一个基于FPGA动态部分重构技术的矩阵乘法加速系统。
-系统以Xilinx Kria KV260视觉AI入门套件为硬件平台，该平台搭载了Zynq UltraScale+ MPSoC，
+系统以Xilinx Kria KV260 Vision AI Starter Kit为硬件平台，该平台搭载了Zynq UltraScale+ MPSoC，
 集成了强大的ARM处理核心和FPGA可编程逻辑，构成了典型的异构计算系统\cite{xilinx2024kv260}。
 利用MPSoC的FPGA部分实现硬件加速，利用ARM核心运行Linux操作系统进行任务调度、资源管理和与FPGA的交互。
 通过在FPGA上划分多个可重构分区，并利用高层次综合（HLS）语言（如C/C++）设计可重构的矩阵运算模块
